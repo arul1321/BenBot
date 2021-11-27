@@ -3,18 +3,30 @@ const {text, document, location, liveLocation, contact, contactsArray, buttonsMe
 const {color} = require('./lib/color')
 const {getBuffer} = require('./lib/functions')
 const {fetchJson} = require('./lib/fetcher')
+const ffmpeg = require('fluent-ffmpeg')
+const speed = require("performance-now")
+const { exec } = require('child_process')
+const hx = require('hxz-api')
+const { y2mate } = require('./lib/y2mate');
+const { y2mateA, y2mateV } = require('./lib/y2mate.js')
+const request = require('request')
+const axios = require('axios')
+let { getRandom} = require('./lib/functions')
 const fs = require('fs')
 const config = JSON.parse(fs.readFileSync('./config.json'))
 let ownerNumber = config.ownerNumber
+let { fetchJosn, kyun, fetchText } = require('./lib/fetcher')
 const getPP = async (jid) => {
 	try {
-					ppnya = await benny.getProfilePicture(jid)
+					ppnya = await arul.getProfilePicture(jid)
 				} catch {
-					ppnya = 'https://i.ibb.co/0qDXtBb/c8ef383d9fa8.jpg'
+					ppnya = 'https://ibb.co/sWKnrLJ'
 				}
 				return ppnya
 }
-
+const isUrl = (url) => {
+			    return url.match(new RegExp(/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&/=]*)/, 'gi'))
+			}
 const msga = (message) => {
                 if (message.length >= 10){
                     return `${message.slice(0, 10)}`
@@ -28,27 +40,27 @@ var presen = false
 var pren = 'composing'
 var namabot = 'Arul-BOT'
 
-module.exports = benny = async(benny, ben) => {
+module.exports = arul = async(arul, rul) => {
 	try {
-		if (!ben.hasNewMessage) return
-        ben = ben.messages.all()[0]
-		if (ben.key.id.startsWith('3EB0') && ben.key.id.length === 12) return
+		if (!rul.hasNewMessage) return
+        rul = rul.messages.all()[0]
+		if (rul.key.id.startsWith('3EB0') && rul.key.id.length === 12) return
 		if (presen) {
-		benny.updatePresence(ben.key.remoteJid, pren)
+		arul.updatePresence(rul.key.remoteJid, pren)
 		}
-		const isGroup = ben.key.remoteJid.endsWith('g.us')
-		const content = JSON.stringify(ben.message)
-		const sender = ben.key.fromMe ? benny.user.jid : isGroup ? ben.participant : ben.key.remoteJid
-		var from = ben.key.remoteJid
-		const groupMetadata = isGroup ? await benny.groupMetadata(from) : ''
+		const isGroup = rul.key.remoteJid.endsWith('g.us')
+		const content = JSON.stringify(rul.message)
+		const sender = rul.key.fromMe ? arul.user.jid : isGroup ? rul.participant : rul.key.remoteJid
+		var from = rul.key.remoteJid
+		const groupMetadata = isGroup ? await arul.groupMetadata(from) : ''
 		const groupName = isGroup ? groupMetadata.subject : ''
-		const type = Object.keys(ben.message)[0]
-const pushname = (sender === benny.user.jid) ? benny.user.name : benny.contacts[sender].notify || benny.contacts[sender].vname || 'Tidak Terbaca'
-		budy = (type === 'conversation') ? ben.message.conversation : (type === 'extendedTextMessage') ? ben.message.extendedTextMessage.text : ''
+		const type = Object.keys(rul.message)[0]
+const pushname = (sender === arul.user.jid) ? arul.user.name : arul.contacts[sender].notify || arul.contacts[sender].vname || 'Tidak Terbaca'
+		budy = (type === 'conversation') ? rul.message.conversation : (type === 'extendedTextMessage') ? rul.message.extendedTextMessage.text : ''
 		prefix = /^[°zZ•π.'":÷×¶∆£¢€¥®™✓=;~ |!+<?#$%^&\/\\©^]/.test(budy) ? budy.match(/^[°zZ•π.'":÷×¶∆£¢€¥®™✓=;~ |!+<?#$%^&\/\\©^]/gi)[0] : '#'
-		 button = (type == 'buttonsResponseMessage') ? ben.message.buttonsResponseMessage.selectedButtonId : ''
-		 template = (type === "templateButtonReplyMessage") && ben.message.templateButtonReplyMessage.selectedId ? ben.message.templateButtonReplyMessage.selectedId : ''
-body = (type === 'conversation' && ben.message.conversation.startsWith(prefix)) ? ben.message.conversation : (type == 'imageMessage') && ben.message[type].caption.startsWith(prefix) ? ben.message[type].caption : (type == 'videoMessage') && ben.message[type].caption.startsWith(prefix) ? ben.message[type].caption : (type == 'extendedTextMessage') && ben.message[type].text.startsWith(prefix) ? ben.message[type].text : (type === "templateButtonReplyMessage") && ben.message.templateButtonReplyMessage.selectedId ? ben.message.templateButtonReplyMessage.selectedId : (type == 'listResponseMessage') && ben.message[type].singleSelectReply.selectedRowId ? ben.message[type].singleSelectReply.selectedRowId : (type == 'buttonsResponseMessage') && ben.message[type].selectedButtonId ? ben.message.buttonsResponseMessage.selectedButtonId : ""
+		 button = (type == 'buttonsResponseMessage') ? rul.message.buttonsResponseMessage.selectedButtonId : ''
+		 template = (type === "templateButtonReplyMessage") && rul.message.templateButtonReplyMessage.selectedId ? rul.message.templateButtonReplyMessage.selectedId : ''
+body = (type === 'conversation' && rul.message.conversation.startsWith(prefix)) ? rul.message.conversation : (type == 'imageMessage') && rul.message[type].caption.startsWith(prefix) ? rul.message[type].caption : (type == 'videoMessage') && rul.message[type].caption.startsWith(prefix) ? rul.message[type].caption : (type == 'extendedTextMessage') && rul.message[type].text.startsWith(prefix) ? rul.message[type].text : (type === "templateButtonReplyMessage") && rul.message.templateButtonReplyMessage.selectedId ? rul.message.templateButtonReplyMessage.selectedId : (type == 'listResponseMessage') && rul.message[type].singleSelectReply.selectedRowId ? rul.message[type].singleSelectReply.selectedRowId : (type == 'buttonsResponseMessage') && rul.message[type].selectedButtonId ? rul.message.buttonsResponseMessage.selectedButtonId : ""
 let command = body.slice(1).trim().split(/ +/).shift().toLowerCase()
 		const args = body.trim().split(/ +/).slice(1)
 		const isCmd = body.startsWith(prefix)
@@ -56,7 +68,7 @@ let command = body.slice(1).trim().split(/ +/).shift().toLowerCase()
 		const arg = body.slice(command.length+2)
 		
 		 const reply = async(teks) => {
-			 benny.sendMessage(from, teks, text, {quoted: ben})
+			 arul.sendMessage(from, teks, text, {quoted: rul})
 		 }
 	
 	mess = {
@@ -79,8 +91,13 @@ let command = body.slice(1).trim().split(/ +/).shift().toLowerCase()
 				Badmin: 'Jadikan bot admin terlebih dahulu!'
 			}
 		}
-		
-		
+		const isMedia = (type === 'imageMessage' || type === 'videoMessage')
+            const isQuotedText = type === 'extendedTextMessage' && content.includes('textMessage')
+            const isQuotedImage = type === 'extendedTextMessage' && content.includes('imageMessage')
+            const isQuotedVideo = type === 'extendedTextMessage' && content.includes('videoMessage')
+            const isQuotedAudio = type === 'extendedTextMessage' && content.includes('audioMessage')
+            const isQuotedSticker = type === 'extendedTextMessage' && content.includes('stickerMessage')
+            
 		if (isCmd) console.log(color('[ COMMAND ]', 'lime'), color(command, 'cyan'), color('from', 'yellow'), color(sender.split('@')[0], 'magenta'))
 		if (!isCmd && !isGroup) console.log(color('[ PRIVATE ]', 'lime'), color(msga(budy), 'cyan'), color('from', 'yellow'), color(sender.split('@')[0], 'magenta'))
 		if (!isCmd && isGroup) console.log(color('[ GROUP ]', 'lime'), color(msga(budy), 'cyan'), color('from', 'yellow'), color(sender.split('@')[0], 'magenta'), color('in', 'orange'), color(groupName, 'pink'))
@@ -88,52 +105,130 @@ let command = body.slice(1).trim().split(/ +/).shift().toLowerCase()
 		switch (command) {
 		case 'menu':
 		case 'help':
-				let poy = 1
-	menunye = `*Hai kak ${pushname} ${decodeURI('%F0%9F%91%8B')}*\n*Nama aku adalah*\n*${namabot}*\n*Source: https://github.com/arulganz/BenBot*\n*Aku terdapat beberapa fitur yang sangat berguna*\n*Dibawah ini:*
-*${poy++}.* ${prefix}presence on
-*${poy++}.* ${prefix}presence off
-*${poy++}.* ${prefix}setrecording
-*${poy++}.* ${prefix}owner
-*${poy++}.* ${prefix}github
-*${poy++}.* ${prefix}artinama
-*${poy++}.* ${prefix}artimimpi`
+	menunye = `*Hallo Kak ${pushname}*
+`
  ppimg = await getPP(sender)
 gambar = await getBuffer(ppimg)
 gbutsan = [
-  {buttonId: '#api', buttonText: {displayText: 'REST API'}, type: 1},
+  {buttonId: '#instagram', buttonText: {displayText: 'INSTAGRAM'}, type: 1},
   {buttonId: '#owner', buttonText: {displayText: 'OWNER'}, type: 1}
 ]
-mhan = await benny.prepareMessage(from, {name: namabot, jpegThumbnail: gambar}, location, {thumbnail: gambar})
+mhan = await arul.prepareMessage(from, {name: namabot, jpegThumbnail: gambar}, location, {thumbnail: gambar})
  gbuttonan = {
 locationMessage: mhan.message.locationMessage,
     contentText: menunye,
-    footerText: '@0',
+    footerText: '*👑 Owner Name : ArulGanz*\n*_🤖 Bot Name : ${namabot}_*\n*_👑 No Owner : +62 812-2985-9085_*\n*_📨 Email : syahrulrahmadan819@gmail.com_*\n*_🌐 Browser : Linux_*\n*_📊 Langauge : Javascript_*\n*_🐣My Birthday : 15-Oktober-2004_*\n\n*Hai Kak Ini Menu ArulBotz*\n\n*Convert Menu*\n*1. !sticker*\n\n*Info Botz*\n*2. !owner*\n\n*Fun Menu*\n*3. !artinama*\n*4. !quotes*\n*5. !quotesanime*\n*6. !quotesdilan*\n*7. !katabijak*\n\n\n©BotWhatsapp By ArulGanz',
     buttons: gbutsan,
     headerType: 'LOCATION'
 }
-		benny.sendMessage(from, gbuttonan, MessageType.buttonsMessage, {quoted: ben, contextInfo:{mentionedJid: [sender, '0@s.whatsapp.net']}})
+		arul.sendMessage(from, gbuttonan, MessageType.buttonsMessage, {quoted: rul, contextInfo:{mentionedJid: [sender, '0@s.whatsapp.net']}})
 	break
-	case 'artimimpi':
-	if (!arg) return reply('Masukan mimpi nya!')
-		let mimpi = await fetchJson(`https://cililitan.herokuapp.com/api/artimimpi?mimpi=${encodeURIComponent(arg)}`)
-	reply(nama.result)
+	case 'instagram':
+	if (!arg) return reply('*Jangan Lupa Follow Instagram*\n*https://instagram.com/_daaa_1*')
+break
+case 'quotes':
+quotes = await fetchJson(`https://api.lolhuman.xyz/api/random/quotes?apikey=d9fe2f01f88422fc0ff8a32b`)
+quotes = quotes.result
+author = quotes.by
+quotes = quotes.quote
+reply(`_${quotes}_\n\n*― ${author}*`)
+break
+case 'play':
+teks = args.join(' ')
+reply(mess.wait)
+if (!teks.endsWith("-doc")){
+resi = await yts(`${teks}`).catch(e => {
+reply('_[ ! ] Error Query Yang Anda Masukan Tidak Ada_')
+})
+let thumbInfo = `â’ã€Œ  *Youtube Search*  ã€
+â”œ *Judul :* ${resi.all[0].title}
+â”œ *ID Video :* ${resi.all[0].videoId}
+â”œ *Diupload Pada :* ${resi.all[0].ago}
+â”œ *Views :* ${resi.all[0].views}
+â”œ *Durasi :* ${resi.all[0].timestamp}
+â”œ *Channel :* ${resi.all[0].author.name}
+â”” *Link Channel :* ${resi.all[0].author.url}
+
+*_Tunggu Proses Upload....._*
+`
+sendFileFromUrl(resi.all[0].image, image, {quoted: fkontak, caption: thumbInfo})
+resi = await y2mateA(resi.all[0].url).catch(e => {
+reply('_[ ! ] Error Saat Memasuki Web Y2mate *Coba Ulangi*_')
+})
+sendFileFromUrl(resi[0].link, audio, {quoted: fkontak, mimetype: 'audio/mp4', filename: resi[0].output})
+}
+if (teks.endsWith("-doc")){
+const tec = teks.split("-doc")
+res = await yts(`${tec}`).catch(e => {
+reply('_[ ! ] Error Query Yang Anda Masukan Tidak Ada_')
+})
+let thumbInfo = `â’ã€Œ  *${botname}*  ã€
+â”œ *Judul :* ${res.all[0].title}
+â”œ *ID Video :* ${res.all[0].videoId}
+â”œ *Diupload Pada :* ${res.all[0].ago}
+â”œ *Views :* ${res.all[0].views}
+â”œ *Durasi :* ${res.all[0].timestamp}
+â”œ *Channel :* ${res.all[0].author.name}
+â”” *Link Channel :* ${res.all[0].author.url}
+
+*_Tunggu Proses Upload....._*
+`
+sendFileFromUrl(res.all[0].image, image, {quoted: fkontak, caption: thumbInfo})
+res = await y2mateA(res.all[0].url).catch(e => {
+reply('_[ ! ] Error Saat Memasuki Web Y2mate*Coba Ulangi*_')
+})
+sendFileFromUrl(res[0].link, document, {quoted: msg, mimetype: 'audio/mp3', filename: res[0].output})
+}
+break
+case 'quotesanime':
+quotes = await fetchJson(`https://api.lolhuman.xyz/api/random/quotesnime?apikey=d9fe2f01f88422fc0ff8a32b`)
+quotes = quotes.result
+quote = quotes.quote
+char = quotes.character
+anime = quotes.anime
+episode = quotes.episode
+reply(`_${quote}_\n\n*― ${char}*\n*― ${anime} ${episode}*`)
+break
+case 'toimg':
+if (!isQuotedSticker) return reply(' reply stickernya gan')
+encmedia = JSON.parse(JSON.stringify(rul).replace('quotedM', 'm')).message.extendedTextMessage.contextInfo
+media = await arul.downloadAndSaveMediaMessage(encmedia, './database/media_user')
+ran = getRandom('.png')
+exec(`ffmpeg -i ${media} ${ran}`, (err) => {
+fs.unlinkSync(media)
+if (err) return reply(' Gagal, pada saat mengkonversi sticker ke gambar ')
+buffer = fs.readFileSync(ran)
+fs.unlinkSync(ran)
+})
+case 'quotesdilan':
+quotedilan = await fetchJson(`https://api.lolhuman.xyz/api/quotes/dilan?apikey=d9fe2f01f88422fc0ff8a32b`)
+reply(quotedilan.result)
+break
+case 'tiktokdl':
+       	   case 'tiktok':
+       	   case 'tt':
+       	   case 'ttdl':
+ 		   if (!isUrl(args[0]) && !args[0].includes('tiktok.com')) return reply(error.lv)
+ 		   reply(mess.wait)
+		    hx.ttdownloader(`${args[0]}`)
+    		.then(result => {
+    		const { wm, nowm, audio } = result
+    		axios.get(`https://tinyurl.com/api-create.php?url=${nowm}`)
+    		.then(async (a) => {
+    		me = `*Lain Kali Jangan Gitu Yak Waterpak Men!!*`
+		    arul.sendMessage(from,{url:`${nowm}`},video,{mimetype:'video/mp4',quoted:rul,caption:me})
+		    })
+	    	})
+     		.catch(e => console.log(e))
+     		break
+case 'katabijak':
+get_result = await fetchJson(`https://api.lolhuman.xyz/api/random/${command}?apikey=d9fe2f01f88422fc0ff8a32b`)
+reply(get_result.result)
 break
 	case 'artinama':
 	if (!arg) return reply('Masukan namanya!')
 	let nama = await fetchJson(`https://cililitan.herokuapp.com/api/artinama?nama=${encodeURIComponent(arg)}`)
 	reply(nama.result)
-break
-case 'github':
-if (isBanned) return reply(mess.only.benned)
-if (isUser) return reply(mess.only.userB)
-if (ispublic) return reply(mess.only.public)
-if (isLimit(sender)) return
-reply('Sabar Sayang.... ')
-anu = await fetchJson (`https://api.lolhuman.xyz/api/github/${body.slice(8)}?apikey=eb4cc21f784bad7c80d16026`)
-buffer = await getBuffer(anu.result.avatar)
-teks = `*GITHUB STALK*\n*٬࿊⃟🐦Nama:* ${anu.result.name}\n*٬࿊⃟🐦Follower:* ${anu.result.followers}\n*٬࿊⃟🐦Following:* ${anu.result.following}\n*٬࿊⃟🐦Bio:* ${anu.result.bio}\n*٬࿊⃟🐦Type:* ${anu.result.type}\n*٬࿊⃟🐦Publik Repo:* ${anu.result.public_repos}\n*٬࿊⃟🐦Publik Gists:*${anu.result.public_gists}\n*٬࿊⃟🐦Company:* ${anu.result.company}\n*٬࿊⃟🐦Location:*${anu.result.location}\n*٬࿊⃟🐦Email:*${anu.result.email}\n*٬࿊⃟🐦url:*${anu.result.url}`
-benny.sendMessage(from, buffer, image, {quoted: mek, caption:teks}
-await limitAdd(sender)
 break
 case 'presence':
 if (!isOwner) return reply(mess.only.owner)
@@ -147,15 +242,102 @@ if (!isOwner) return reply(mess.only.owner)
 		reply('Pilih on atau off!')
 	}
 break
+case "sticker":
+      case "stiker":
+      case "sg":
+      case "s":
+        if (
+          ((isMedia && !rul.message.videoMessage) || isQuotedImage) &&
+          args.length == 0
+        ) {
+          const encmedia = isQuotedImage
+            ? JSON.parse(JSON.stringify(rul).replace("quotedM", "m")).message
+                .extendedTextMessage.contextInfo
+            : rul;
+          const media = await arul.downloadAndSaveMediaMessage(encmedia);
+          ran = "666.webp";
+          await ffmpeg(`./${media}`)
+            .input(media)
+            .on("start", function (cmd) {
+              console.log(`Started : ${cmd}`);
+            })
+            .on("error", function (err) {
+              console.log(`Error : ${err}`);
+              fs.unlinkSync(media);
+              reply("error");
+            })
+            .on("end", function () {
+              console.log("Finish");
+              arul.sendMessage(from, fs.readFileSync(ran), sticker, {
+                quoted: rul,
+              });
+              fs.unlinkSync(media);
+              fs.unlinkSync(ran);
+            })
+            .addOutputOptions([
+              `-vcodec`,
+              `libwebp`,
+              `-vf`,
+              `scale='min(320,iw)':min'(320,ih)':force_original_aspect_ratio=decrease,fps=15, pad=320:320:-1:-1:color=white@0.0, split [a][b]; [a] palettegen=reserve_transparent=on:transparency_color=ffffff [p]; [b][p] paletteuse`,
+            ])
+            .toFormat("webp")
+            .save(ran);
+        } else if (
+          ((isMedia && rul.message.videoMessage.seconds < 11) ||
+            (isQuotedVideo &&
+              rul.message.extendedTextMessage.contextInfo.quotedMessage
+                .videoMessage.seconds < 11)) &&
+          args.length == 0
+        ) {
+          const encmedia = isQuotedVideo
+            ? JSON.parse(JSON.stringify(rul).replace("quotedM", "m")).message
+                .extendedTextMessage.contextInfo
+            : rul;
+          const media = await arul.downloadAndSaveMediaMessage(encmedia);
+          ran = "999.webp";
+          reply(mess.wait);
+          await ffmpeg(`./${media}`)
+            .inputFormat(media.split(".")[1])
+            .on("start", function (cmd) {
+              console.log(`Started : ${cmd}`);
+            })
+            .on("error", function (err) {
+              console.log(`Error : ${err}`);
+              fs.unlinkSync(media);
+              tipe = media.endsWith(".mp4") ? "video" : "gif";
+              reply(`Gagal, pada saat mengkonversi ${tipe} ke stiker`);
+            })
+            .on("end", function () {
+              console.log("Finish");
+              arul.sendMessage(from, fs.readFileSync(ran), sticker, {
+                quoted: rul,
+              });
+              fs.unlinkSync(media);
+              fs.unlinkSync(ran);
+            })
+            .addOutputOptions([
+              `-vcodec`,
+              `libwebp`,
+              `-vf`,
+              `scale='min(320,iw)':min'(320,ih)':force_original_aspect_ratio=decrease,fps=15, pad=320:320:-1:-1:color=white@0.0, split [a][b]; [a] palettegen=reserve_transparent=on:transparency_color=ffffff [p]; [b][p] paletteuse`,
+            ])
+            .toFormat("webp")
+            .save(ran);
+        } else {
+          reply(
+            `Kirim gambar dengan caption ${prefix}sticker\nDurasi Sticker Video 1-9 Detik`
+          );
+        }
+        break;
 case 'owner':
 const vcard = 'BEGIN:VCARD\n'
             + `VERSION:3.0\n`
             + `FN:Owner ${namabot} \n` // GANTI NAMA LU
             + `ORG:Owner ${namabot};\n`
-            + `TEL;type=CELL;type=VOICE;waid=${ownerNumber.replace('@s.whatsapp.net', '')}:+${ownerNumber.replace('@s.whatsapp.net', '')}\n` // GANTI NOMOR LU
+            + `TEL;type=CELL;type=VOICE;waid=${ownerNumber.replace('6281229859085', '')}:+${ownerNumber.replace('6281229859085', '')}\n` // GANTI NOMOR LU
             + `END:VCARD`
-			anub = await benny.sendMessage(from, {displayName: `Owner ${namabot}`, vcard: vcard}, contact, {quoted: ben})
-			benny.sendMessage(from, 'Itu nomor ownerku', text, {quoted: anub})
+			anub = await arul.sendMessage(from, {displayName: `Owner ${namabot}`, vcard: vcard}, contact, {quoted: rul})
+			arul.sendMessage(from, 'Itu nomor ownerku', text, {quoted: anub})
 			break
 			if (!isOwner) return reply(mess.only.owner)
 			case 'setrecording':

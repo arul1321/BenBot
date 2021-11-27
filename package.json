@@ -1,11 +1,11 @@
 {
-  "name": "BENNYBOT",
+  "name": "ARULGANZBOT",
   "version": "1.0.0",
   "description": "Termux or Command Prompt",
   "main": "index.js",
   "scripts": {
     "test": "node index.js",
-    "start": "node index.js"
+    "start": "node Arul"
   },
   "directories": {
     "lib": "lib"
@@ -20,15 +20,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/bennysolo/BennyBOTWA.git"
+    "url": "git+https://github.com/arulganz/BenBot.git"
   },
   "keywords": [
     "k"
   ],
-  "author": "Benny Hidayat",
+  "author": "Arul Rahmadan",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/bennysolo/BennyBOTWA/issues"
+    "url": "https://github.com/arulganz/BenBot/issues"
   },
-  "homepage": "https://github.com/bennysolo/BennyBOTWA/readme"
+  "homepage": "https://github.com/arulganz/BenBot.git"
 }
